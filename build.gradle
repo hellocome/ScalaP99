@@ -1,0 +1,39 @@
+apply plugin: 'scala'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+ext {
+    scalaVersion = '2.12'
+    scalaDotVersion = scalaVersion + '.2'
+    scalatest = '3.0.1'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    main {
+        scala {
+            srcDirs = ['src/main/scala']
+        }
+    }
+    test {
+        scala {
+            srcDirs = ['src/test/scala']
+        }
+    }
+}
+
+dependencies {
+    compile "org.scala-lang:scala-library:$scalaDotVersion"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile ("org.scalatest:scalatest_${scalaVersion}:${scalatest}") {
+      exclude group: 'org.scala-lang', module: 'scala-library'
+    }
+}
+
+task copyToLib(type: Copy) {
+    into "$buildDir/output/lib"
+    from configurations.runtime
+}
